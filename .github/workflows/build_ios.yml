@@ -1,14 +1,19 @@
-name: Build iOS IPA (Sideload / AltStore / Sideloadly)
+name: Build iOS IPA
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build-ios:
     name: Build Unsigned IPA for iOS
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
       - name: Checkout repository
@@ -29,8 +34,8 @@ jobs:
       - name: Package Runner.app into .IPA
         run: |
           mkdir -p Payload
-          cp -r build/ios/iphoneos/Runner.app Payload/
-          zip -r PrestaRD.ipa Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -r -q PrestaRD.ipa Payload
           rm -rf Payload
 
       - name: Upload IPA Artifact
